@@ -33,11 +33,23 @@ jobs:
           grep -q '"name": "Mei"' webui/public/mei-brand.json
           grep -q 'realizer.meiocg.org' webui/public/mei-brand.json
 
+      - name: Validate PWA identity
+        shell: bash
+        run: |
+          grep -q '"name": "Mei AI"' webui/js/manifest.json
+          grep -q '"short_name": "Mei"' webui/js/manifest.json
+          grep -q '"description": "Mei' webui/js/manifest.json
+          ! grep -q 'Agent Zero' webui/js/manifest.json
+          ! grep -q 'Agent Zero' webui/public/icon.svg
+          ! grep -q 'Agent Zero' webui/public/icon-maskable.svg
+
       - name: Check SVG assets
         shell: bash
         run: |
           grep -q '<svg' webui/public/favicon.svg
           grep -q '<svg' webui/public/dark.svg
+          grep -q '<svg' webui/public/icon.svg
+          grep -q '<svg' webui/public/icon-maskable.svg
 
       - name: Check HTML structure
         shell: bash
