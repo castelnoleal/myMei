@@ -1,5 +1,5 @@
-# Use the pre-built base image for A0
-# FROM agent-zero-base:local
+# Mei local-development image built on the upstream Agent Zero runtime base.
+# The inherited base keeps the runtime-compatible A0 internals while Mei is developed as the product layer.
 FROM agent0ai/agent-zero-base:latest
 
 # Set BRANCH to "local" if not provided
@@ -8,19 +8,19 @@ ENV BRANCH=$BRANCH
 
 # Copy filesystem files to root
 COPY ./docker/run/fs/ /
-# Copy current development files to git, they will only be used in "local" branch
+# Copy current development files to git; used by the local development branch.
 COPY ./ /git/agent-zero
 
 # pre installation steps
 RUN bash /ins/pre_install.sh $BRANCH
 
-# install A0
+# install the inherited runtime
 RUN bash /ins/install_A0.sh $BRANCH
 
 # install additional software
 RUN bash /ins/install_additional.sh $BRANCH
 
-# cleanup repo and install A0 without caching, this speeds up builds
+# cleanup repo and install the inherited runtime without caching, this speeds up builds
 ARG CACHE_DATE=none
 RUN echo "cache buster $CACHE_DATE" && bash /ins/install_A02.sh $BRANCH
 
