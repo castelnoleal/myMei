@@ -4,5 +4,21 @@
   "organization": "MEIOCG",
   "endpoint": "https://realizer.meiocg.org",
   "repository": "https://github.com/castelnoleal/myMei",
-  "accent": "#a78bfa"
+  "accent": "#a78bfa",
+  "capabilities": [
+    "agentic-planning",
+    "coding",
+    "research",
+    "browser-automation",
+    "file-and-project-workflows",
+    "multi-agent-workflows",
+    "realizer-media"
+  ],
+  "integrations": {
+    "realizer": {
+      "name": "Realizer",
+      "url": "https://realizer.meiocg.org",
+      "status": "external-endpoint"
+    }
+  }
 }
