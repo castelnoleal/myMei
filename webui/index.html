@@ -10,41 +10,12 @@
     <meta name="description" content="Mei — an autonomous AI agent platform for creating, building, researching, and operating software.">
 
     <style id="startup-transition-critical">
-        #startup-transition {
-            position: fixed;
-            inset: 0;
-            z-index: 2147483647;
-            display: grid;
-            place-items: center;
-            margin: 0;
-            background: #131313;
-            color: #fff;
-            opacity: 1;
-            transition: opacity 240ms ease;
-        }
-        #startup-transition[data-theme="light"],
-        body.light-mode #startup-transition { background: #fafafa; color: #000; }
-        #startup-transition > svg {
-            width: clamp(12rem, 34vw, 23rem);
-            max-width: 72vw;
-            height: auto;
-            opacity: 1;
-            animation: none;
-        }
-        #startup-transition > p {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            clip-path: inset(50%);
-        }
-        #startup-transition.startup-transition-leaving {
-            opacity: 0;
-            pointer-events: none;
-        }
-        @media (prefers-reduced-motion: reduce) {
-            #startup-transition { transition: none; }
-        }
+        #startup-transition { position: fixed; inset: 0; z-index: 2147483647; display: grid; place-items: center; margin: 0; background: #131313; color: #fff; opacity: 1; transition: opacity 240ms ease; }
+        #startup-transition[data-theme="light"], body.light-mode #startup-transition { background: #fafafa; color: #000; }
+        #startup-transition > svg { width: clamp(12rem, 34vw, 23rem); max-width: 72vw; height: auto; opacity: 1; animation: none; }
+        #startup-transition > p { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+        #startup-transition.startup-transition-leaving { opacity: 0; pointer-events: none; }
+        @media (prefers-reduced-motion: reduce) { #startup-transition { transition: none; } }
     </style>
 
     <script>
@@ -54,9 +25,7 @@
             history.replaceState(null, "", `${safeUrl.pathname}${safeUrl.search}${safeUrl.hash}`)
             if ("serviceWorker" in navigator) {
                 navigator.serviceWorker.getRegistrations()
-                    .then((registrations) => Promise.allSettled(
-                        registrations.map((registration) => registration.unregister()),
-                    ))
+                    .then((registrations) => Promise.allSettled(registrations.map((registration) => registration.unregister())))
                     .catch((error) => console.warn("Unable to disable service workers.", error))
             }
         }
@@ -71,7 +40,6 @@
             const root = document.documentElement
             let applicationReady = false
             let revealStarted = false
-
             const revealApplication = (force = false) => {
                 if (revealStarted || (!force && !applicationReady)) return
                 const overlay = document.getElementById("startup-transition")
@@ -81,34 +49,87 @@
                     const removeOverlay = () => overlay.remove()
                     overlay.classList.add("startup-transition-leaving")
                     overlay.addEventListener("transitionend", removeOverlay, { once: true })
-                })
+                    setTimeout(removeOverlay, 600)
+                }))
             }
-
-            window.addEventListener("mei-app-ready", () => {
+            document.addEventListener("webui-extensions-loaded", () => {
                 applicationReady = true
                 revealApplication()
-            })
-
-            window.addEventListener("load", () => {
-                setTimeout(() => revealApplication(true), 12000)
-            })
+            }, { once: true })
+            const loadMaterialIcons = () => {
+                const fontLoad = document.fonts?.load ? document.fonts.load('24px "Material Symbols Outlined"') : Promise.resolve([])
+                fontLoad.then((faces) => { if (faces.length > 0) root.classList.add("material-icons-ready") }).catch((error) => console.warn("Material Symbols font unavailable.", error))
+            }
+            if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadMaterialIcons, { once: true })
+            else loadMaterialIcons()
+            setTimeout(() => revealApplication(true), 8000)
         })()
     </script>
+    <link rel="preload" as="style" href="/vendor/fonts/fonts.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="index.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/loading-indicators.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/messages.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="components/messages/action-buttons/simple-action-buttons.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="components/messages/process-group/process-group.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/toast.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/settings.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/modals.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/surfaces.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/scheduler-datepicker.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/scheduler.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/notification.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/buttons.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="css/tables.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="components/canvas/right-canvas.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="vendor/flatpickr/flatpickr.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <script defer src="vendor/flatpickr/flatpickr.min.js"></script>
+    <script>globalThis.safeCall = function (name, ...args) { if (window[name]) window[name](...args) }</script>
+    <script type="module" src="index.js"></script>
+    <script defer src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
+    <script defer src="vendor/ace-min/ace.js"></script>
+    <script defer src="vendor/qrcode.min.js"></script>
+    <script type="module" src="js/initFw.js"></script>
+    <link rel="preload" as="style" href="vendor/ace-min/ace.min.css" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" as="style" href="vendor/katex/katex.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'">
+    <script defer src="vendor/katex/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="vendor/katex/katex.auto-render.min.js" crossorigin="anonymous"></script>
+    <link rel="manifest" href="js/manifest.json">
+    <script>
+        globalThis.gitinfo = { version: "{{version_no}}", commit_time: "{{version_time}}" };
+        globalThis.runtimeInfo = {
+            ...(globalThis.runtimeInfo || {}), id: "{{runtime_id}}", isDevelopment: "{{runtime_is_development}}" === "true", loggedIn: "{{logged_in}}" === "true",
+            timezone: "{{user_timezone_setting}}", timeFormat: "{{user_time_format_setting}}", uiControlVisibility: {{user_ui_control_visibility}}, webuiExtensions: {{webui_extension_manifest}},
+        };
+    </script>
+    <x-extension id="page-head"></x-extension>
 </head>
 
-<body>
-    <div id="startup-transition" role="status" aria-live="polite">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" aria-hidden="true">
-            <rect width="720" height="720" rx="144" fill="#111827"/>
-            <path d="M120 548V172h84l156 201 156-201h84v376h-90V309L360 503 210 309v239h-90Z" fill="#fff"/>
-            <path d="M360 128 517 548h-82l-75-212-75 212h-82l157-420Z" fill="#a78bfa" opacity=".92"/>
-        </svg>
-        <p>Starting Mei</p>
+<body class="dark-mode device-pointer" x-data>
+    <script>try { if (localStorage.getItem("darkMode") === "false") document.body.classList.replace("dark-mode", "light-mode") } catch (_) {}</script>
+    <div class="container">
+        <div id="sidebar-overlay" x-data>
+            <template x-if="$store.sidebar"><div class="sidebar-overlay" :class="{'visible': $store.sidebar.isOpen && $store.sidebar.isMobile()}" @click="$store.sidebar.close()"></div></template>
+        </div>
+        <x-component path="sidebar/left-sidebar.html"></x-component>
+        <div id="right-panel" class="panel" :class="{ 'chat-active': $store.welcomeStore && !$store.welcomeStore.isVisible }">
+            <x-component path="chat/top-section/chat-top.html"></x-component>
+            <div x-data><template x-if="$store.welcomeStore && $store.welcomeStore.isVisible"><div class="welcome-host"><x-component path="welcome/welcome-screen.html"></x-component></div></template></div>
+            <div id="chat-area-wrapper" x-data x-show="!$store.welcomeStore || !$store.welcomeStore.isVisible">
+                <div id="chat-history"></div>
+                <div id="chat-loading-splash" class="message-window-loader is-loading chat-loading-splash" role="status" aria-live="polite" hidden><span class="loading-indicator-label">Loading chat</span></div>
+                <div id="chat-nav-buttons" aria-label="Chat navigation" x-cloak>
+                    <button class="btn-icon-action" title="Scroll to top" @click="$store.chatNavigation.scrollToTop()"><x-icon name="vertical_align_top"></x-icon></button>
+                    <button class="btn-icon-action" title="Previous user message" @click="$store.chatNavigation.scrollToPrevUserMessage()"><x-icon name="keyboard_arrow_up"></x-icon></button>
+                    <button class="btn-icon-action" title="Next user message" @click="$store.chatNavigation.scrollToNextUserMessage()"><x-icon name="keyboard_arrow_down"></x-icon></button>
+                    <button class="btn-icon-action" title="Scroll to bottom" @click="$store.chatNavigation.scrollToBottom()"><x-icon name="vertical_align_bottom"></x-icon></button>
+                </div>
+            </div>
+            <div style="position: relative; height: 0;"><x-component path="notifications/notification-toast-stack.html"></x-component></div>
+            <div id="toast" class="toast"><div class="toast__content"><div class="toast__title"></div><div class="toast__separator"></div><div class="toast__message"></div></div><button class="toast__copy" style="display: none;">Copy</button><button class="toast__close">Close</button></div>
+            <div x-data><template x-if="!$store.welcomeStore || !$store.welcomeStore.isVisible"><div><x-component path="chat/input/progress.html"></x-component><x-component path="chat/input/chat-bar.html"></x-component></div></template></div>
+        </div>
+        <x-component path="canvas/right-canvas.html"></x-component>
     </div>
-
-    <main id="app"></main>
-
-    <script type="module" src="/index.js"></script>
+    <x-component path="chat/attachments/dragDropOverlay.html"></x-component>
 </body>
-
 </html>
