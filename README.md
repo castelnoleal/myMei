@@ -8,7 +8,7 @@ Mei is an independent MEIOCG project derived from the Agent Zero open-source pro
 **Current public endpoint:** https://realizer.meiocg.org
 
 [![Project](https://img.shields.io/badge/Project-Mei-111827?style=for-the-badge)](https://github.com/castelnoleal/myMei)
-[![Realizer](https://img.shields.io/badge/Realizer-realızer.meiocg.org-4F46E5?style=for-the-badge)](https://realizer.meiocg.org)
+[![Realizer](https://img.shields.io/badge/Realizer-realizer.meiocg.org-4F46E5?style=for-the-badge)](https://realizer.meiocg.org)
 [![License](https://img.shields.io/badge/License-MIT-16A34A?style=for-the-badge)](./LICENSE)
 
 </div>
