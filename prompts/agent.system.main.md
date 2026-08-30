@@ -2,6 +2,8 @@
 
 {{ include "agent.system.main.role.md" }}
 
+{{ include "mei.system.identity.md" }}
+
 {{ include "agent.system.main.specifics.md" }}
 
 {{ include "agent.system.main.environment.md" }}
