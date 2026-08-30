@@ -1,0 +1,53 @@
+name: Mei CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Mei
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate Python syntax
+        run: python -m compileall -q . -x '(^|/)(usr|logs|work_dir|memory)(/|$)'
+
+      - name: Validate Mei identity files
+        shell: bash
+        run: |
+          test "$(grep -c '<title>Mei</title>' webui/index.html)" -ge 1
+          grep -q 'content="Mei"' webui/login.html
+          grep -q 'Starting Mei' webui/splash.html
+          grep -q 'Starting Mei in safe mode' webui/safe.html
+          grep -q '"name": "Mei"' webui/public/mei-brand.json
+          grep -q 'realizer.meiocg.org' webui/public/mei-brand.json
+
+      - name: Check SVG assets
+        shell: bash
+        run: |
+          grep -q '<svg' webui/public/favicon.svg
+          grep -q '<svg' webui/public/dark.svg
+
+      - name: Check HTML structure
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          for name in ["index.html", "login.html", "safe.html", "splash.html"]:
+              text = Path("webui", name).read_text(encoding="utf-8")
+              assert "<html" in text and "</html>" in text, name
+              assert "<head>" in text and "</head>" in text, name
+              assert "<body" in text and "</body>" in text, name
+          print("Mei HTML shell validation passed")
+          PY
