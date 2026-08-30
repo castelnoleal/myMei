@@ -2,7 +2,7 @@
 
 ## Purpose
 
-- Own core prompt templates used by agents, tools, framework messages, behavior updates, summaries, skills, projects, and system context.
+- Own core prompt templates used by Mei, tools, framework messages, behavior updates, summaries, skills, projects, and system context.
 - Keep prompt contracts explicit and synchronized with code that renders them.
 
 ## Ownership
@@ -16,7 +16,7 @@
 
 - Do not include secrets, real API keys, or private user data in prompt templates.
 - Keep placeholder names, include aliases, and template assumptions synchronized with prompt-loading code and extensions.
-- Prompt changes can alter agent behavior; keep edits narrow and intentional.
+- Prompt changes can alter Mei behavior; keep edits narrow and intentional.
 - Maintain clear separation between core behavior prompts and profile/plugin-specific customization.
 - Summary prompts that compress history should preserve loaded skill names from `skill_instructions` metadata without copying full skill bodies.
 
