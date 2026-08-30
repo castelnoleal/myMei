@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Mei</title>
+    <meta name="application-name" content="Mei">
+    <meta name="apple-mobile-web-app-title" content="Mei">
+    <meta name="description" content="Mei — an autonomous AI agent platform for creating, building, researching, and operating software.">
 
     <style id="startup-transition-critical">
         #startup-transition {
@@ -78,19 +81,34 @@
                     const removeOverlay = () => overlay.remove()
                     overlay.classList.add("startup-transition-leaving")
                     overlay.addEventListener("transitionend", removeOverlay, { once: true })
-                    setTimeout(removeOverlay, 350)
                 })
             }
 
-            window.__meiApplicationReady = () => {
+            window.addEventListener("mei-app-ready", () => {
                 applicationReady = true
                 revealApplication()
-            }
+            })
 
             window.addEventListener("load", () => {
                 setTimeout(() => revealApplication(true), 12000)
             })
         })()
     </script>
+</head>
 
-    <!-- Mei identity: the underlying Agent Zero runtime is retained; this web surface is branded Mei. -->
+<body>
+    <div id="startup-transition" role="status" aria-live="polite">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720" aria-hidden="true">
+            <rect width="720" height="720" rx="144" fill="#111827"/>
+            <path d="M120 548V172h84l156 201 156-201h84v376h-90V309L360 503 210 309v239h-90Z" fill="#fff"/>
+            <path d="M360 128 517 548h-82l-75-212-75 212h-82l157-420Z" fill="#a78bfa" opacity=".92"/>
+        </svg>
+        <p>Starting Mei</p>
+    </div>
+
+    <main id="app"></main>
+
+    <script type="module" src="/index.js"></script>
+</body>
+
+</html>
